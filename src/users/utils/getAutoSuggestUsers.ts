@@ -1,6 +1,6 @@
 import { User } from './../models';
 import { users } from './../data';
-import { userComparator } from './../helpers';
+import { userComparator } from './userComparator';
 
 export const getAutoSuggestUsers = (loginSubstring = '', limit = 10): User[] => {
 	return users
