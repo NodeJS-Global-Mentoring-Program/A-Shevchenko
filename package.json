@@ -14,6 +14,9 @@
 		"express": "^4.17.1",
 		"express-joi-validation": "^4.0.4-beta.0",
 		"joi-extract-type": "^15.0.8",
+		"pg": "^8.3.0",
+		"pg-hstore": "^2.3.3",
+		"sequelize": "^6.3.4",
 		"uuid": "^8.3.0"
 	},
 	"devDependencies": {

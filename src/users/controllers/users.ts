@@ -1,58 +1,78 @@
-import { users, setNewData } from './../data';
+import { Model, Op } from 'sequelize';
+
 import { User } from './../models';
+import { UserDB } from './../database';
 
-export const getUserById = (id: string): User | undefined => {
-	return users
-		.filter(({ isDeleted }) => !isDeleted)
-		.find(item => item.id === id);
-};
-
-export const getUsers = (): User[] => {
-    return users.filter(({ isDeleted }) => !isDeleted);
-};
-
-export const removeUser = (id: string): boolean => {
-	const user = getUserById(id);
-
-	if (user) {
-		const newData = users.filter(el => el.id !== id);
-
-		setNewData(newData);
-
-		return true;
+export const initUsers = async (limit: number): Promise<void> => {
+	for (let i = 1; i <= limit; i++) {
+		await UserDB.create({
+			login: `User${i}`,
+			password: `password${i}`,
+			age: i * 10
+		});
 	}
-
-	return false;	
 };
 
-export const createUser = (userData: User): boolean => {
-	users.push({
-		...userData,
-		isDeleted: false
+export const getUserById = async (id: string): Promise<Model<User, User>[]> => {
+	const users = await UserDB.findAll({
+		where: {
+			isDeleted: false,
+			id: id
+		}
 	});
 
-	return true;	
+	return users;
 };
 
-export const updateUser = (id: string, userData: User): boolean => {
-	const user = getUserById(id);
+export const getUsers = async (): Promise<Model<User, User>[]> => {
+	const users = await UserDB.findAll({
+		where: {
+			isDeleted: false
+		}
+	});
 
-	if (user) {
-		const newData = users.map(el => {
-			if (el.id === id) {
-				return {
-					...el,
-					...userData
-				};
+    return users;
+};
+
+export const getAutoSuggestUsers = async (loginSubstring = '', limit = 10): Promise<Model<User, User>[]> => {
+	const users = await UserDB.findAll({
+		where: {
+			isDeleted: false,
+			login: {
+				[Op.substring]: loginSubstring
 			}
-			
-			return el;
-		});
+		},
+		limit: limit,
+		order: [
+			['login', 'DESC']
+		]
+	});
 
-		setNewData(newData);
+    return users;
+};
 
-		return true;
-	}
+export const removeUser = async (id: string): Promise<number> => {
+	const users = UserDB.destroy({
+		where: {
+			id: id
+		}
+	});
 
-	return false;	
+	return users;
+};
+
+export const createUser = async (userData: User): Promise<Model<User, User>> => {
+	const users = UserDB.create(userData);
+
+	return users;	
+};
+
+export const updateUser = async (id: string, userData: User): Promise<[number, Model<User, User>[]]> => {
+	const users = UserDB.update(userData, {
+		where: {
+			id: id
+		}
+	});
+
+	return users;	
 };
