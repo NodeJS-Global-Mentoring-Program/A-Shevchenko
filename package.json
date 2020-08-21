@@ -11,9 +11,11 @@
 	"license": "ISC",
 	"dependencies": {
 		"@hapi/joi": "^17.1.1",
+		"@types/md5": "^2.2.0",
 		"express": "^4.17.1",
 		"express-joi-validation": "^4.0.4-beta.0",
 		"joi-extract-type": "^15.0.8",
+		"md5": "^2.3.0",
 		"pg": "^8.3.0",
 		"pg-hstore": "^2.3.3",
 		"sequelize": "^6.3.4",

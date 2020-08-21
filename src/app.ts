@@ -1,13 +1,16 @@
 import express from 'express';
 
-import { usersRouter } from './users/routes';
-import { initDB } from './users/database';
+import { usersRouter } from './routers';
+import { initDB } from './loaders';
+import { UserModel } from './models';
 
 const port = process.env.PORT || 3000;
 
 const app = express();
 const jsonParser = express.json();
-const db = initDB();
+
+const UModel = new UserModel();
+const db = initDB(UModel);
 
 app.use(jsonParser);
 app.use('/users/', usersRouter);

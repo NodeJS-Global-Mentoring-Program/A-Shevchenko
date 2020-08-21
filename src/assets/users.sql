@@ -5,7 +5,7 @@
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
   "login" varchar(20) NOT NULL,
-  "password" varchar(20) NOT NULL,
+  "password" varchar(40) NOT NULL,
   "age" int NOT NULL,
   "isDeleted" boolean DEFAULT 'false'
 );
