@@ -33,3 +33,25 @@ export const IUserDB = sequelize.define('user', {
         defaultValue: false
     }
 })
+
+export const IUserPermissionsDB = sequelize.define('users_group', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+	uId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'users',
+            key: 'id',
+        }
+    },
+	gId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'groups',
+            key: 'id',
+        }
+    }
+})

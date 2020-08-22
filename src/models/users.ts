@@ -1,7 +1,7 @@
 import { Model, Op } from 'sequelize';
 import md5 from 'md5';
 
-import { IUser, IUserDB } from './../types';
+import { IUser, IUserDB, IUserPermissionsDB } from './../types';
 import { random } from './../utils';
 
 export class UserModel {
@@ -21,6 +21,13 @@ export class UserModel {
 				password: md5(`password${i}`),
 				age: random()
 			});
+
+			for (let j = 1; j <= limit; j++) {
+				await IUserPermissionsDB.create({
+					uId: i,
+					gId: j
+				});
+			}
 		}
 	}
 
@@ -62,8 +69,11 @@ export class UserModel {
 		return users;
 	}
 
-	async remove (id: string): Promise<number> {
-		const users = await IUserDB.destroy({
+	async remove (id: string): Promise<[number, Model<IUser, IUser>[]]> {
+		const data = {
+			isDeleted: true
+		};
+		const users = await IUserDB.update(data, {
 			where: {
 				id: id
 			}

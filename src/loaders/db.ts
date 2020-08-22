@@ -1,5 +1,5 @@
 import { sequelize } from './../config';
-import { UserModel } from './../models';
+import { UserModel, GroupModel } from './../models';
 
 const connect = async (): Promise<void> => {
     try {
@@ -19,11 +19,12 @@ const sync = async () : Promise<void> => {
     }
 };
 
-export const initDB = async (userModel: UserModel, init = false) : Promise<void> => {
+export const initDB = async (userModel: UserModel, groupModel: GroupModel, init = false) : Promise<void> => {
     await sync();
     await connect();
 
     if (init) {
-        await userModel.initUsers(10);
+        await groupModel.initGroups(3);
+        await userModel.initUsers(3);
     }
 };

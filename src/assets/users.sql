@@ -4,19 +4,18 @@
 
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
-  "login" varchar(20) NOT NULL,
-  "password" varchar(40) NOT NULL,
-  "age" int NOT NULL,
-  "isDeleted" boolean DEFAULT 'false'
+  "login" VARCHAR(20) NOT NULL,
+  "password" VARCHAR(40) NOT NULL,
+  "age" INTEGER NOT NULL,
+  "isDeleted" BOOLEAN DEFAULT 'false'
 );
 
 --
--- Dumping data for table "users"
+-- Table structure for table "users_groups"
 --
 
-INSERT INTO "users" ("login", "password", "age") VALUES
-('User1', '111', 10),
-('User2', '222', 20),
-('User3', '333', 30),
-('User4', '444', 40),
-('User5', '555', 50);
+CREATE TABLE "users_groups" (
+  "id" SERIAL PRIMARY KEY,
+  "uId" INTEGER REFERENCES users (id) ON DELETE CASCADE,
+  "gId" INTEGER REFERENCES groups (id) ON DELETE CASCADE
+);
