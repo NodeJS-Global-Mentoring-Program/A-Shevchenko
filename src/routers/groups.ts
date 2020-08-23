@@ -5,7 +5,8 @@ import 'joi-extract-type';
 import { GroupQuerySchema } from './../validation';
 import { GroupService } from './../services';
 import { GroupModel } from './../models';
-import { errorMiddleware } from './main';
+import { errorMiddleware, logMiddleware } from './../middlewares';
+import { errorHandler } from './../utils';
 
 const app = express();
 const validator = createValidator({ passError: true });
@@ -14,39 +15,39 @@ const UModel = new GroupModel();
 const GService = new GroupService(UModel);
 
 app.route('/:id')
-    .get(async (req, res) => {
+    .get(logMiddleware, async (req, res) => {
         const { id } = req.params;
 
-        const groups = await GService.getById(id);
+        const groups = await GService.getById(id).catch(err => errorHandler(req, res, err));
 
         return res.json(groups);
     })
-    .delete(async (req, res) => {
+    .delete(logMiddleware, async (req, res) => {
         const { id } = req.params;
     
-        const groups = await GService.remove(id);
+        const groups = await GService.remove(id).catch(err => errorHandler(req, res, err));
     
         return res.json(groups);
     })
-    .put(validator.body(GroupQuerySchema), async (req, res) => {
+    .put(logMiddleware, validator.body(GroupQuerySchema), async (req, res) => {
         const { params, body } = req;
         const { id } = params;
     
-        const groups = await GService.update(id, body);
+        const groups = await GService.update(id, body).catch(err => errorHandler(req, res, err));
     
         return res.json(groups);
     });
 
 app.route('/')
-    .get(async (req, res) => {
-        const groups = await GService.getAll();
+    .get(logMiddleware, async (req, res) => {
+        const groups = await GService.getAll().catch(err => errorHandler(req, res, err));
 
         return res.json(groups);
     })
-    .post(validator.body(GroupQuerySchema), async (req, res) => {
+    .post(logMiddleware, validator.body(GroupQuerySchema), async (req, res) => {
         const { body } = req;
     
-        const groups = await GService.create(body);
+        const groups = await GService.create(body).catch(err => errorHandler(req, res, err));
     
         return res.json(groups);
     });

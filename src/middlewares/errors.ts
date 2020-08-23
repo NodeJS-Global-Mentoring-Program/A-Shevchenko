@@ -4,7 +4,6 @@ import 'joi-extract-type';
 
 export const errorMiddleware = (err: ExpressJoiError, req: Request, res: Response, next: NextFunction): void => {
     const { error, type } = err || {};
-    console.log(err);
 
     if (error && error.isJoi) {
         res.status(400).json({

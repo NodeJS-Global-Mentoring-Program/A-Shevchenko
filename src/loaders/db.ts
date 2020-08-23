@@ -12,7 +12,7 @@ const connect = async (): Promise<void> => {
 
 const sync = async () : Promise<void> => {
     try {
-        await sequelize.sync();
+        await sequelize.sync({ logging: false });
         console.log('DB synced up');
     } catch (error) {
         console.error('Unable to sync the database:', error);
