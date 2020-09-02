@@ -3,7 +3,7 @@ import { createValidator } from 'express-joi-validation';
 import 'joi-extract-type';
 
 import { UserQuerySchema } from './../validation';
-import { UserService } from './../services';
+import { UserService, AuthService } from './../services';
 import { UserModel } from './../models';
 import { errorMiddleware, logMiddleware } from './../middlewares';
 import { errorHandler } from './../utils';
@@ -13,6 +13,7 @@ const validator = createValidator({ passError: true });
 
 const UModel = new UserModel();
 const UService = new UserService(UModel);
+const AService = new AuthService(UModel);
 
 app.get('/auto-suggest', logMiddleware, async (req, res) => {
     const { str, limit } = req.body;
@@ -20,6 +21,14 @@ app.get('/auto-suggest', logMiddleware, async (req, res) => {
     const users = await UService.getAutoSuggests(str, limit).catch(err => errorHandler(req, res, err));
 
     return res.json(users);
+});
+
+app.get('auth', async (req, res) => {
+    const { username, password } = req.body;
+
+    const token = await AService.login(username, password).catch(err => errorHandler(req, res, err));
+
+    return res.json(token);
 });
 
 app.route('/:id')

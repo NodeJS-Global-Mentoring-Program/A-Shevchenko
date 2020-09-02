@@ -5,16 +5,20 @@ import { IUser, IUserDB, IUserPermissionsDB } from './../types';
 import { random } from './../utils';
 
 export class UserModel {
-	private transformData (userData: IUser): IUser {
+	private transformData(userData: IUser): IUser {
 		const { password } = userData;
 
 		return {
 			...userData,
-			password: md5(password)
+			password: this.generatePassword(password)
 		};
 	}
 
-	async initUsers (limit: number): Promise<void> {
+	private generatePassword(password: string): string {
+		return md5(password);
+	}
+
+	async initUsers(limit: number): Promise<void> {
 		for (let i = 1; i <= limit; i++) {
 			await IUserDB.create({
 				login: `User${i}`,
@@ -31,7 +35,19 @@ export class UserModel {
 		}
 	}
 
-	async getById (id: string): Promise<Model<IUser, IUser>[]> {
+	async getByAuth(username: string, password: string): Promise<Model<IUser, IUser>> {
+		const user = await IUserDB.findOne({
+			where: {
+				isDeleted: false,
+				login: username,
+				password: this.generatePassword(password)
+			}
+		});
+	
+		return user;
+	}
+
+	async getById(id: string): Promise<Model<IUser, IUser>[]> {
 		const users = await IUserDB.findAll({
 			where: {
 				isDeleted: false,
@@ -42,7 +58,7 @@ export class UserModel {
 		return users;
 	}
 
-	async getAll (): Promise<Model<IUser, IUser>[]> {
+	async getAll(): Promise<Model<IUser, IUser>[]> {
 		const users = await IUserDB.findAll({
 			where: {
 				isDeleted: false
@@ -52,7 +68,7 @@ export class UserModel {
 		return users;
 	}
 
-	async getAutoSuggests (loginSubstring = '', limit = 10): Promise<Model<IUser, IUser>[]> {
+	async getAutoSuggests(loginSubstring = '', limit = 10): Promise<Model<IUser, IUser>[]> {
 		const users = await IUserDB.findAll({
 			where: {
 				isDeleted: false,
@@ -69,7 +85,7 @@ export class UserModel {
 		return users;
 	}
 
-	async remove (id: string): Promise<[number, Model<IUser, IUser>[]]> {
+	async remove(id: string): Promise<[number, Model<IUser, IUser>[]]> {
 		const data = {
 			isDeleted: true
 		};
@@ -82,7 +98,7 @@ export class UserModel {
 		return users;
 	}
 
-	async create (userData: IUser): Promise<Model<IUser, IUser>> {
+	async create(userData: IUser): Promise<Model<IUser, IUser>> {
 		const data = this.transformData(userData);
 		const users = await IUserDB.create(data);
 	
