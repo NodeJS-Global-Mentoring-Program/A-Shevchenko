@@ -6,7 +6,7 @@ import { UserModel, GroupModel } from './models';
 import { initDB } from './loaders';
 
 const log = bunyan.createLogger({ name: "NodeJS" });
-const port = process.env.PORT || 3000;
+const { PORT } = process.env;
 
 const app = express();
 const jsonParser = express.json();
@@ -19,8 +19,8 @@ app.use(jsonParser);
 app.use('/users/', usersRouter);
 app.use('/groups/', groupsRouter);
 
-app.listen(port, () => {
-    console.log(`Server is listening on http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is listening on http://localhost:${PORT}`);
 });
 
 process.on('uncaughtException', (err) => {
