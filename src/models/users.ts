@@ -17,6 +17,7 @@ export class UserModel {
 	async initUsers (limit: number): Promise<void> {
 		for (let i = 1; i <= limit; i++) {
 			await IUserDB.create({
+				id: i,
 				login: `User${i}`,
 				password: md5(`password${i}`),
 				age: random()
@@ -29,6 +30,15 @@ export class UserModel {
 				});
 			}
 		}
+	}
+
+	async clear (): Promise<number> {
+		const users = await IUserDB.destroy({
+			where: {},
+			truncate: false
+		});
+	
+		return users;
 	}
 
 	async getById (id: string): Promise<Model<IUser, IUser>[]> {

@@ -10,9 +10,12 @@ import { errorHandler } from './../utils';
 
 const app = express();
 const validator = createValidator({ passError: true });
+const jsonParser = express.json();
 
 const UModel = new UserModel();
 const UService = new UserService(UModel);
+
+app.use(jsonParser);
 
 app.get('/auto-suggest', logMiddleware, async (req, res) => {
     const { str, limit } = req.body;

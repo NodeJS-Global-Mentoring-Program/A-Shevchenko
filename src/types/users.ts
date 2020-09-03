@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from './../config';
 
 export type IUser = {
-	id: string,
+	id: number,
 	login: string,
 	password: string,
 	age: number,

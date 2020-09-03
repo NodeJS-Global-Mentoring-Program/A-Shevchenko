@@ -5,7 +5,7 @@ import { sequelize } from './../config';
 export type GroupPermision = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
 
 export type IGroup = {
-	id: string,
+	id: number,
 	name: string,
 	permissions: GroupPermision[]
 }

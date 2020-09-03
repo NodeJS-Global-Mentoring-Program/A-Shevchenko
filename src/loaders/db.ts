@@ -24,6 +24,8 @@ export const initDB = async (userModel: UserModel, groupModel: GroupModel, init 
     await connect();
 
     if (init) {
+        await groupModel.clear();
+        await userModel.clear();
         await groupModel.initGroups(3);
         await userModel.initUsers(3);
     }

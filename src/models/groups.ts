@@ -6,6 +6,7 @@ export class GroupModel {
 	async initGroups (limit: number): Promise<void> {
 		for (let i = 1; i <= limit; i++) {
 			await IGroupDB.create({
+				id: i,
 				name: `Group${i}`
 			});
 
@@ -16,6 +17,15 @@ export class GroupModel {
 				});
 			}
 		}
+	}
+
+	async clear (): Promise<number> {
+		const groups = await IGroupDB.destroy({
+			where: {},
+			truncate: false
+		});
+	
+		return groups;
 	}
 
 	async getById (id: string): Promise<Model<IGroup, IGroup>[]> {

@@ -10,9 +10,12 @@ import { errorHandler } from './../utils';
 
 const app = express();
 const validator = createValidator({ passError: true });
+const jsonParser = express.json();
 
 const UModel = new GroupModel();
 const GService = new GroupService(UModel);
+
+app.use(jsonParser);
 
 app.route('/:id')
     .get(logMiddleware, async (req, res) => {
