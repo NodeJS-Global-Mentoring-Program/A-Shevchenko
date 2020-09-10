@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import bunyan from 'bunyan';
 
 import { usersRouter, groupsRouter } from './routers';
@@ -15,6 +16,11 @@ const UModel = new UserModel();
 const GModel = new GroupModel();
 const db = initDB(UModel, GModel);
 
+app.use(cors({
+    "origin": true,
+    "methods": "GET, PUT, POST, DELETE",
+    "optionsSuccessStatus": 200
+}));
 app.use(jsonParser);
 app.use('/users/', usersRouter);
 app.use('/groups/', groupsRouter);
