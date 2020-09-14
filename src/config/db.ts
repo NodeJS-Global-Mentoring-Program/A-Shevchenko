@@ -11,4 +11,4 @@ export const sequelize = new Sequelize({
     port: 5432
 });
 
-
+export const secretKey = 'Lfd_erle334Wdsd';
