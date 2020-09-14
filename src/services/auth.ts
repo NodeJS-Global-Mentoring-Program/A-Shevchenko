@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 
 import { UserModel } from './../models';
+import { secretKey } from './../config';
 
 export class AuthService {
     private userModel: UserModel;
@@ -14,19 +15,16 @@ export class AuthService {
             user: username,
             time: +new Date()
         };
-        const signature = 'Lfd_erle334Wdsd';
         const expiration = '6h';
     
-        return jwt.sign({ data, }, signature, { expiresIn: expiration });
+        return jwt.sign({ data, }, secretKey, { expiresIn: expiration });
     }
 
-    async login(username: string, password: string): Promise<string> {
-        const user = await this.userModel.getByAuth(username, password);
+    async login(login: string, password: string): Promise<string> {
+        const user = await this.userModel.getByAuth(login, password);
 
-        if (!user) {
-            return null;
-        } else {
-            return this.generateToken(username);
-        }
+        return user
+            ? this.generateToken(login)
+            : null;
     }
 }

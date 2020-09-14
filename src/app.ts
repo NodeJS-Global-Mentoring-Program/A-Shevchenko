@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bunyan from 'bunyan';
 
-import { usersRouter, groupsRouter } from './routers';
+import { usersRouter, groupsRouter, authRouter } from './routers';
 import { UserModel, GroupModel } from './models';
 import { initDB } from './loaders';
 
@@ -22,6 +22,7 @@ app.use(cors({
     "optionsSuccessStatus": 200
 }));
 app.use(jsonParser);
+app.use(authRouter);
 app.use('/users/', usersRouter);
 app.use('/groups/', groupsRouter);
 
